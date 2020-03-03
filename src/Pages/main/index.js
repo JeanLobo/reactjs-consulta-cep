@@ -24,8 +24,8 @@ export default function Main() {
 
   // Carregar os dados do localStorage
   useEffect(() => {
-    const results = localStorage.getItem('cepResults');
-    setCepResults(JSON.parse(results));
+    const results = JSON.parse(localStorage.getItem('cepResults'));
+    setCepResults(results === null ? [] : results);
   }, []);
 
   // Salvar os dados do localStorage
@@ -71,12 +71,9 @@ export default function Main() {
 
   async function handleSubmit(event) {
     event.preventDefault();
-    console.log(cepSearch);
+
     setLoading(true);
     setError(false);
-
-    console.log(loading);
-    console.log(error);
 
     try {
       //Checando se o cep foi preenchido
