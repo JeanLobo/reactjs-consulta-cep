@@ -11,10 +11,12 @@ import {
   FaSearch,
   FaSpinner,
   FaCheckCircle,
+  FaExpandArrowsAlt,
 } from 'react-icons/fa';
+
 import { MdError } from 'react-icons/md';
 
-import { Form, SubmitButton, List, MenssageToast } from './styles';
+import { Form, SubmitButton, Button, List, MenssageToast } from './styles';
 
 export default function Main() {
   const [cepSearch, setCepSearch] = useState('');

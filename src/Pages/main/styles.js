@@ -55,6 +55,21 @@ export const SubmitButton = styled.button.attrs(props => ({
     `}
 `;
 
+export const Button = styled.button`
+  background: linear-gradient(45deg, #fe6b8b 30%, #ff8e53 90%);
+  border: 0;
+  padding: 0 15px;
+  margin-left: 10px;
+  border-radius: 4px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  :hover {
+    opacity: 0.7;
+  }
+`;
+
 export const List = styled.ul`
   list-style: nome;
   margin-top: 30px;
