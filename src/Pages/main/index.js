@@ -4,7 +4,7 @@ import api from '../../services/api';
 
 import Container from '../../components/Container';
 import { FaAddressBook, FaSearch, FaSpinner } from 'react-icons/fa';
-import { Form, SubmitButton } from './styles';
+import { Form, SubmitButton, List } from './styles';
 
 export default function Main() {
   const [cepSearch, setCepSearch] = useState('');
@@ -50,6 +50,17 @@ export default function Main() {
           )}
         </SubmitButton>
       </Form>
+
+      <List>
+        {cepResults.map(cepResult => (
+          <li key={cepResult.cep}>
+            <span>{cepResult.logradouro}</span>
+            {/* <Link to={`/cepResult/${encodeURIComponent(cepResult.cep)}`}>
+                Detalhes
+              </Link> */}
+          </li>
+        ))}
+      </List>
     </Container>
   );
 }
