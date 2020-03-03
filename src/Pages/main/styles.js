@@ -4,6 +4,7 @@ export const Form = styled.form`
   margin-top: 30px;
   display: flex;
   flex-direction: row;
+
   input {
     flex: 1;
     border: 1px solid ${props => (props.error ? '#ff6b6b' : '#eee')};
