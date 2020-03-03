@@ -10,19 +10,34 @@ export default function Main() {
   const [cepSearch, setCepSearch] = useState('');
   const [cepResults, setCepResults] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
 
   async function handleSubmit(event) {
     event.preventDefault();
 
     setLoading(true);
+    setError(false);
 
-    const response = await api.get(`/${cepSearch}/json/`);
+    try {
+      //Checando se o cep foi preenchido
+      if (cepSearch === '') throw 'Você precisa indicar um cep';
 
-    console.log(response.data);
+      //Checando se o cep já foi adicionado
+      const hasEnd = cepResults.find(
+        end => end.cep.replace('-', '') === cepSearch
+      );
 
-    if (response.data) {
-      setCepResults([...cepResults, response.data]);
-      setCepSearch('');
+      if (hasEnd) throw 'Endereço duplicado';
+
+      const response = await api.get(`/${cepSearch}/json/`);
+
+      if (response.data) {
+        setCepResults([...cepResults, response.data]);
+        setCepSearch('');
+      }
+    } catch (error) {
+      setError(true);
+    } finally {
       setLoading(false);
     }
   }
@@ -34,7 +49,7 @@ export default function Main() {
         Consultar CEP
       </h1>
 
-      <Form onSubmit={handleSubmit}>
+      <Form onSubmit={handleSubmit} error={error}>
         <input
           type="text"
           placeholder="Consultar CEP"

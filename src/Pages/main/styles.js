@@ -11,6 +11,10 @@ export const Form = styled.form`
     border-radius: 4px;
     font-size: 16px;
     transition: border 0.25s ease-out;
+
+    :focus {
+      border: 2px solid #ff8e53;
+    }
   }
 `;
 
