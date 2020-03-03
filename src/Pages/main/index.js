@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -6,8 +6,15 @@ import 'react-toastify/dist/ReactToastify.css';
 import api from '../../services/api';
 
 import Container from '../../components/Container';
-import { FaAddressBook, FaSearch, FaSpinner } from 'react-icons/fa';
-import { Form, SubmitButton, List } from './styles';
+import {
+  FaAddressBook,
+  FaSearch,
+  FaSpinner,
+  FaCheckCircle,
+} from 'react-icons/fa';
+import { MdError } from 'react-icons/md';
+
+import { Form, SubmitButton, List, MenssageToast } from './styles';
 
 export default function Main() {
   const [cepSearch, setCepSearch] = useState('');
@@ -15,15 +22,28 @@ export default function Main() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
 
+  // Carregar os dados do localStorage
+  useEffect(() => {
+    const results = localStorage.getItem('cepResults');
+    setCepResults(JSON.parse(results));
+  }, []);
+
+  // Salvar os dados do localStorage
+  useEffect(() => {
+    localStorage.setItem('cepResults', JSON.stringify(cepResults));
+  }, [cepResults]);
+
   function notifyUser(message, isError = false) {
     if (isError) {
       toast.error(
         <>
-          <FaAddressBook /> {message}
+          <MenssageToast>
+            <MdError size={24} /> {message}
+          </MenssageToast>
         </>,
         {
           position: 'top-center',
-          autoClose: 3000,
+          autoClose: 2000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
@@ -31,27 +51,37 @@ export default function Main() {
         }
       );
     } else {
-      toast.success(message, {
-        position: 'top-center',
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-      });
+      toast.success(
+        <>
+          <MenssageToast>
+            <FaCheckCircle size={24} /> {message}
+          </MenssageToast>
+        </>,
+        {
+          position: 'top-center',
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        }
+      );
     }
   }
 
   async function handleSubmit(event) {
     event.preventDefault();
-
+    console.log(cepSearch);
     setLoading(true);
     setError(false);
+
+    console.log(loading);
+    console.log(error);
 
     try {
       //Checando se o cep foi preenchido
       if (cepSearch === '')
-        throw notifyUser(' Você precisa informar um CEP.', true);
+        throw notifyUser(' É necessário informar um CEP.', true);
 
       //Checando se o cep já foi adicionado
       const hasEnd = cepResults.find(
@@ -61,8 +91,6 @@ export default function Main() {
       if (hasEnd) throw notifyUser(' CEP duplicado abaixo!', true);
 
       const response = await api.get(`/${cepSearch}/json/`);
-
-      console.log(response);
 
       if (response.data) {
         setCepResults([...cepResults, response.data]);
@@ -90,7 +118,7 @@ export default function Main() {
           type="text"
           placeholder="Consultar CEP"
           value={cepSearch}
-          onChange={e => setCepSearch(e.target.value)}
+          onChange={e => setCepSearch(e.target.value.replace('-', ''))}
         />
 
         <SubmitButton loading={loading}>
@@ -105,7 +133,9 @@ export default function Main() {
       <List>
         {cepResults.map(cepResult => (
           <li key={cepResult.cep}>
-            <span>{cepResult.logradouro}</span>
+            <span>
+              <strong>{cepResult.cep}</strong> - {cepResult.logradouro}
+            </span>
           </li>
         ))}
       </List>

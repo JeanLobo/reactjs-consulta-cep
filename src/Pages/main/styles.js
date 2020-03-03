@@ -76,3 +76,10 @@ export const List = styled.ul`
     }
   }
 `;
+
+export const MenssageToast = styled.h3`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+`;
