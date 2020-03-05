@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -14,7 +15,7 @@ import {
   FaExpandArrowsAlt,
 } from 'react-icons/fa';
 
-import { MdError } from 'react-icons/md';
+import { MdError, MdDelete } from 'react-icons/md';
 
 import { Form, SubmitButton, Button, List, MenssageToast } from './styles';
 
@@ -133,7 +134,13 @@ export default function Main() {
         {cepResults.map(cepResult => (
           <li key={cepResult.cep}>
             <span>
-              <strong>{cepResult.cep}</strong> - {cepResult.logradouro}
+              <>
+                <strong>{cepResult.cep}</strong>
+                {cepResult.logradouro}
+              </>
+              <Link to={`/cepdetails/${cepResult.cep}`}>
+                <FaExpandArrowsAlt size={14} />
+              </Link>
             </span>
           </li>
         ))}

@@ -1,5 +1,10 @@
 import React from 'react';
+import Container from '../../components/Container';
 
 export default function CepDetails() {
-  return <div>Hello Cep Details</div>;
+  return (
+    <Container>
+      <h1>Detalhes do CEP</h1>
+    </Container>
+  );
 }
