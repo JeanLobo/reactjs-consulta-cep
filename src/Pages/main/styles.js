@@ -56,18 +56,30 @@ export const SubmitButton = styled.button.attrs(props => ({
 `;
 
 export const Button = styled.button`
-  background: linear-gradient(45deg, #fe6b8b 30%, #ff8e53 90%);
-  border: 0;
-  padding: 0 15px;
-  margin-left: 10px;
+  background: none;
+  height: 42px;
+  width: 42px;
   border-radius: 4px;
+  border: 1px solid #ff6b6b;
+  color: #ff6b6b;
   display: flex;
   justify-content: center;
   align-items: center;
+  transition: all 0.5s;
 
   :hover {
-    opacity: 0.7;
+    background: linear-gradient(45deg, #fe6b8b 30%, #ff8e53 90%);
+    color: #fff;
+    border: 1px solid #fff;
   }
+`;
+
+export const MenuGroup = styled.div`
+  background: none;
+  width: 90px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 `;
 
 export const List = styled.ul`
