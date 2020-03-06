@@ -84,11 +84,10 @@ export default function Main() {
 
   async function handleSearchCoordinatesByZipCode(cep) {
     const response = await geoCodeApi.get(`/${cep}?json=1`);
+
     const { latt, longt } = response.data;
 
-    const coordinates = response.data;
-    //console.log(coordinates);
-    return coordinates;
+    return { latt, longt };
   }
 
   async function handleSubmit(event) {
@@ -106,26 +105,24 @@ export default function Main() {
         throw notifyUser(' Informe um CEP válido.', true);
 
       //Checando se o cep já foi adicionado
-      // const hasEnd = cepResults.find(
-      //   end => end.cep.replace('-', '') === cepSearch.replace('-', '')
-      // );
+      const hasEnd = cepResults.find(
+        end => end.cep.replace('-', '') === cepSearch.replace('-', '')
+      );
 
-      // if (hasEnd) throw notifyUser(' O CEP já está na lista abaixo.', true);
+      if (hasEnd) throw notifyUser(' O CEP já está na lista abaixo.', true);
 
       const response = await viaCepApi.get(`/${cepSearch}/json/`);
 
       const endSearch = response.data;
 
       if (response.data) {
-        //console.log(response.data);
-        console.log(
-          Promise.resolve(handleSearchCoordinatesByZipCode(endSearch.cep))
+        const { latt, longt } = await handleSearchCoordinatesByZipCode(
+          endSearch.cep
         );
-        // const { latt, longt } = handleSearchCoordinatesByZipCode(endSearch.cep);
-        // const endSearchCoordinate = { ...endSearch, latt, longt };
-        // console.log(endSearchCoordinate);
 
-        //setCepResults([...cepResults, response.data]);
+        const endSearchCoordinate = { ...endSearch, latt, longt };
+
+        setCepResults([...cepResults, endSearchCoordinate]);
         setCepSearch('');
         notifyUser(' CEP encontrado com Sucesso!!!');
       } else {
