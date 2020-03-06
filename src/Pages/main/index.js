@@ -8,14 +8,13 @@ import api from '../../services/api';
 
 import Container from '../../components/Container';
 import {
-  FaAddressBook,
   FaSearch,
   FaSpinner,
   FaCheckCircle,
   FaExpandArrowsAlt,
 } from 'react-icons/fa';
 
-import { MdError, MdDelete } from 'react-icons/md';
+import { MdPlace, MdError, MdDelete } from 'react-icons/md';
 import {
   Form,
   SubmitButton,
@@ -78,6 +77,15 @@ export default function Main() {
     }
   }
 
+  function handleDeleteCep(cep) {
+    const cepResultsNew = cepResults.filter(
+      end => end.cep.replace('-', '') !== cep.replace('-', '')
+    );
+
+    setCepResults(cepResultsNew);
+    notifyUser(' CEP removido com Sucesso!!!');
+  }
+
   async function handleSubmit(event) {
     event.preventDefault();
 
@@ -86,15 +94,18 @@ export default function Main() {
 
     try {
       //Checando se o cep foi preenchido
-      if (cepSearch === '')
-        throw notifyUser(' É necessário informar um CEP.', true);
+      if (cepSearch === '') throw notifyUser(' Informe o CEP.', true);
+
+      //Checando se o cep foi preenchido corretamente
+      if (cepSearch.replace('-', '').length !== 8)
+        throw notifyUser(' Informe um CEP válido.', true);
 
       //Checando se o cep já foi adicionado
       const hasEnd = cepResults.find(
-        end => end.cep.replace('-', '') === cepSearch
+        end => end.cep.replace('-', '') === cepSearch.replace('-', '')
       );
 
-      if (hasEnd) throw notifyUser(' CEP duplicado abaixo!', true);
+      if (hasEnd) throw notifyUser(' O CEP já está na lista abaixo.', true);
 
       const response = await api.get(`/${cepSearch}/json/`);
 
@@ -115,7 +126,7 @@ export default function Main() {
   return (
     <Container>
       <h1>
-        <FaAddressBook />
+        <MdPlace size={22} />
         Consultar CEP
       </h1>
 
@@ -145,7 +156,7 @@ export default function Main() {
                 {cepResult.logradouro}
               </>
               <MenuGroup>
-                <Button>
+                <Button onClick={() => handleDeleteCep(cepResult.cep)}>
                   <MdDelete size={18} />
                 </Button>
                 <Link to={`/cepdetails/${cepResult.cep}`}>
