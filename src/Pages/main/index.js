@@ -7,6 +7,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import api from '../../services/api';
 
 import Container from '../../components/Container';
+import Button from '../../components/Button';
+
 import {
   FaSearch,
   FaSpinner,
@@ -15,14 +17,7 @@ import {
 } from 'react-icons/fa';
 
 import { MdPlace, MdError, MdDelete } from 'react-icons/md';
-import {
-  Form,
-  SubmitButton,
-  Button,
-  List,
-  MenuGroup,
-  MenssageToast,
-} from './styles';
+import { Form, SubmitButton, List, MenuGroup, MenssageToast } from './styles';
 
 export default function Main() {
   const [cepSearch, setCepSearch] = useState('');
