@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Container from '../../components/Container';
 import Button from '../../components/Button';
 
-import api from '../../services/api';
+import viaCepApi from '../../services/viaCepApi';
 
 import { MdPlace, MdArrowBack } from 'react-icons/md';
 
@@ -12,7 +12,7 @@ export default props => {
   async function handleSearchCep() {
     const { cep } = props.match.params;
 
-    const response = await api.get(`/${cep}/json/`);
+    const response = await viaCepApi.get(`/${cep}/json/`);
 
     setCepResults(response.data);
   }

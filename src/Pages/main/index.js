@@ -4,7 +4,8 @@ import { Link } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-import api from '../../services/api';
+import viaCepApi from '../../services/viaCepApi';
+import geoCodeApi from '../../services/geoCodeApi';
 
 import Container from '../../components/Container';
 import Button from '../../components/Button';
@@ -81,6 +82,15 @@ export default function Main() {
     notifyUser(' CEP removido com Sucesso!!!');
   }
 
+  async function handleSearchCoordinatesByZipCode(cep) {
+    const response = await geoCodeApi.get(`/${cep}?json=1`);
+    const { latt, longt } = response.data;
+
+    const coordinates = response.data;
+    //console.log(coordinates);
+    return coordinates;
+  }
+
   async function handleSubmit(event) {
     event.preventDefault();
 
@@ -96,16 +106,26 @@ export default function Main() {
         throw notifyUser(' Informe um CEP válido.', true);
 
       //Checando se o cep já foi adicionado
-      const hasEnd = cepResults.find(
-        end => end.cep.replace('-', '') === cepSearch.replace('-', '')
-      );
+      // const hasEnd = cepResults.find(
+      //   end => end.cep.replace('-', '') === cepSearch.replace('-', '')
+      // );
 
-      if (hasEnd) throw notifyUser(' O CEP já está na lista abaixo.', true);
+      // if (hasEnd) throw notifyUser(' O CEP já está na lista abaixo.', true);
 
-      const response = await api.get(`/${cepSearch}/json/`);
+      const response = await viaCepApi.get(`/${cepSearch}/json/`);
+
+      const endSearch = response.data;
 
       if (response.data) {
-        setCepResults([...cepResults, response.data]);
+        //console.log(response.data);
+        console.log(
+          Promise.resolve(handleSearchCoordinatesByZipCode(endSearch.cep))
+        );
+        // const { latt, longt } = handleSearchCoordinatesByZipCode(endSearch.cep);
+        // const endSearchCoordinate = { ...endSearch, latt, longt };
+        // console.log(endSearchCoordinate);
+
+        //setCepResults([...cepResults, response.data]);
         setCepSearch('');
         notifyUser(' CEP encontrado com Sucesso!!!');
       } else {
