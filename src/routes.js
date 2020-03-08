@@ -2,8 +2,8 @@ import React from 'react';
 
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 
-import Main from './pages/main';
-import CepDetails from './pages/cepdetails';
+import Main from './Pages/main';
+import CepDetails from './Pages/cepdetails';
 
 const Routes = () => (
   <BrowserRouter>

@@ -1,20 +1,22 @@
 import React, { useState, useEffect } from 'react';
+
 import Container from '../../components/Container';
-import Button from '../../components/Button';
+import ButtonText from '../../components/ButtonText';
+import MapCepSearch from '../../components/MapCepSearch';
 
-import viaCepApi from '../../services/viaCepApi';
+import { CepDetails } from './styles';
 
-import { MdPlace, MdArrowBack } from 'react-icons/md';
+import { MdPlace, MdArrowBack, MdMap } from 'react-icons/md';
 
 export default props => {
-  const [cepResults, setCepResults] = useState([]);
+  const [cepDetails, setCepDetails] = useState([]);
 
-  async function handleSearchCep() {
+  function handleSearchCep() {
+    const cepResults = JSON.parse(localStorage.getItem('cepResults'));
     const { cep } = props.match.params;
+    const cepFound = cepResults.find(end => end.cep === cep);
 
-    const response = await viaCepApi.get(`/${cep}/json/`);
-
-    setCepResults(response.data);
+    setCepDetails(cepFound);
   }
 
   useEffect(() => {
@@ -22,7 +24,6 @@ export default props => {
   }, []);
 
   function goBack() {
-    console.log('Clicou em goBack()');
     props.history.goBack();
   }
 
@@ -30,17 +31,38 @@ export default props => {
     <Container>
       <h1>
         <MdPlace size={22} />
-        Detalhes do CEP
+        Detalhes do endereço.
       </h1>
 
-      <strong>
-        <h2>{cepResults.cep}</h2>
-      </strong>
-      <p>{cepResults.logradouro}</p>
+      <CepDetails>
+        <h2>
+          Cep: {cepDetails.cep} Ibge: {cepDetails.ibge}
+        </h2>
 
-      <Button onClick={goBack}>
-        <MdArrowBack size={20} />
-      </Button>
+        <div>
+          <p>{cepDetails.logradouro}</p>
+          <p>
+            {cepDetails.bairro} - {cepDetails.localidade} - {cepDetails.uf}
+          </p>
+
+          <h3>
+            Latitude: {cepDetails.latt} Longitude: {cepDetails.longt}
+          </h3>
+
+          <ButtonText onClick={goBack}>
+            <MdArrowBack size={20} /> Voltar
+          </ButtonText>
+        </div>
+      </CepDetails>
+      <br />
+      <h1>
+        <MdMap size={22} />
+        Mapa do endereço.
+      </h1>
+      <MapCepSearch
+        lattGeolocation={cepDetails.latt}
+        longtGeolocation={cepDetails.longt}
+      />
     </Container>
   );
 };

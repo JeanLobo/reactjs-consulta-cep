@@ -1,6 +1,12 @@
 import { createGlobalStyle } from 'styled-components';
 
 export default createGlobalStyle`
+
+  .leaflet-container {
+    height: 420px;
+    width: 100%;
+  }
+
   * {
     margin:0;
     padding: 0;
