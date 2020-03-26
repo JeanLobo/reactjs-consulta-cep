@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
+import Swal from 'sweetalert2';
+
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -74,12 +76,28 @@ export default function Main() {
   }
 
   function handleDeleteCep(cep) {
-    const cepResultsNew = cepResults.filter(
-      end => end.cep.replace('-', '') !== cep.replace('-', '')
-    );
+    Swal.fire({
+      title: 'Você tem certeza?',
+      text: 'Você não poderá desfazer essa exclusão!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      cancelButtonText: 'Cancelar',
+      confirmButtonText: 'Sim, pode excluir!',
+    }).then(result => {
+      if (result.value) {
+        const cepResultsNew = cepResults.filter(
+          end => end.cep.replace('-', '') !== cep.replace('-', '')
+        );
 
-    setCepResults(cepResultsNew);
-    notifyUser(' CEP removido com Sucesso!!!');
+        setCepResults(cepResultsNew);
+
+        Swal.fire('Excluido!', 'Você excluiu o cep selecionado.', 'success');
+      }
+    });
+
+    //notifyUser(' CEP removido com Sucesso!!!');
   }
 
   async function handleSearchCoordinatesByZipCode(cep) {
